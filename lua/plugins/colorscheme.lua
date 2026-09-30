@@ -1,4 +1,4 @@
--- Tema VS Code (Dark+)
+-- VS Code theme (Dark+)
 return {
   "Mofiqul/vscode.nvim",
   lazy = false,

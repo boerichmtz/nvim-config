@@ -1,26 +1,26 @@
--- Explorador de archivos lateral (estilo VS Code)
+-- Sidebar file explorer (VS Code style)
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
-  lazy = false, -- carga al inicio para que "nvim ." abra el explorador
+  lazy = false, -- load at startup so "nvim ." opens the explorer
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-tree/nvim-web-devicons",
     "MunifTanjim/nui.nvim",
   },
   keys = {
-    -- Ctrl+b abre/cierra el explorador (igual que en VS Code)
-    { "<C-b>", "<cmd>Neotree toggle<cr>", desc = "Explorador" },
+    -- Ctrl+B toggles the explorer (same as VS Code)
+    { "<C-b>", "<cmd>Neotree toggle<cr>", desc = "Explorer" },
   },
   opts = {
     close_if_last_window = true,
     window = {
       width = 30,
       mappings = {
-        -- Flechas ← → desplazan el árbol a los lados para ver rutas largas
+        -- Left/Right arrows scroll the tree sideways to read long paths
         ["<Right>"] = function() vim.cmd("normal! 5zl") end,
         ["<Left>"] = function() vim.cmd("normal! 5zh") end,
-        -- T abre una terminal NUEVA en la carpeta seleccionada
+        -- T opens a NEW terminal in the selected folder
         ["T"] = function(state)
           local node = state.tree:get_node()
           local dir = vim.fn.getcwd()
@@ -34,7 +34,7 @@ return {
     },
     filesystem = {
       follow_current_file = { enabled = true },
-      use_libuv_file_watcher = true, -- se actualiza solo al crear/borrar archivos
+      use_libuv_file_watcher = true, -- refreshes when files are created/deleted
       hijack_netrw_behavior = "open_default",
       filtered_items = {
         hide_dotfiles = false,

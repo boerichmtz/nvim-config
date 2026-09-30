@@ -1,18 +1,18 @@
-# Neovim estilo VS Code
+# VS Code-style Neovim
 
-Configuración de Neovim con apariencia y atajos de VS Code, para C, C++ y Python.
+Neovim configuration with the look and shortcuts of VS Code, for C, C++ and Python.
 
-## Instalar (WSL / Linux)
+## Install (WSL / Linux)
 
 ```
-mv ~/.config/nvim ~/.config/nvim.bak-$(date +%Y%m%d)   # respaldo, si ya existe
+mv ~/.config/nvim ~/.config/nvim.bak-$(date +%Y%m%d)   # backup, if one exists
 git clone https://github.com/boerichmtz/nvim-config ~/.config/nvim
 nvim
 ```
 
-Requiere Neovim 0.11+, git, gcc, make, unzip, ripgrep y Node.js (para pyright).
+Requires Neovim 0.11+, git, gcc, make, unzip, ripgrep and Node.js (for pyright).
 
-## Actualizar
+## Update
 
-Dentro de nvim: `:ActualizarConfig` y reinicia nvim.
-O desde la terminal: `git -C ~/.config/nvim pull`.
+Inside nvim: `:UpdateConfig`, then restart nvim.
+Or from the shell: `git -C ~/.config/nvim pull`.

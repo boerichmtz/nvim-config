@@ -1,12 +1,12 @@
--- Autocompletado con menú emergente (IntelliSense)
+-- Autocompletion popup (IntelliSense)
 return {
   "saghen/blink.cmp",
-  version = "1.*", -- usa el binario precompilado, no requiere Rust
+  version = "1.*", -- uses the prebuilt binary, no Rust needed
   dependencies = { "rafamadriz/friendly-snippets" },
   event = { "InsertEnter", "CmdlineEnter" },
   opts = {
     keymap = {
-      -- Tab acepta la sugerencia, como en VS Code
+      -- Tab accepts the suggestion, like VS Code
       preset = "super-tab",
       ["<CR>"] = { "accept", "fallback" },
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },

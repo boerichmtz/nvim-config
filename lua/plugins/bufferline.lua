@@ -1,13 +1,13 @@
--- Pestañas superiores para buffers abiertos
+-- Top tabs for open buffers
 return {
   "akinsho/bufferline.nvim",
   version = "*",
   event = "VeryLazy",
   dependencies = { "nvim-tree/nvim-web-devicons" },
   keys = {
-    -- Navegar entre pestañas con Alt + Izquierda / Derecha
-    { "<A-Left>",  "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer anterior" },
-    { "<A-Right>", "<cmd>BufferLineCycleNext<cr>", desc = "Buffer siguiente" },
+    -- Switch tabs with Alt+Left / Alt+Right
+    { "<A-Left>",  "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer" },
+    { "<A-Right>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
   },
   opts = {
     options = {
@@ -16,7 +16,7 @@ return {
       offsets = {
         {
           filetype = "neo-tree",
-          text = "Explorador",
+          text = "Explorer",
           highlight = "Directory",
           text_align = "left",
         },

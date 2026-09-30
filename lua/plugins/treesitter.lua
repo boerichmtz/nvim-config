@@ -1,4 +1,4 @@
--- Resaltado de sintaxis preciso (como el de VS Code)
+-- Accurate syntax highlighting (like VS Code)
 return {
   "nvim-treesitter/nvim-treesitter",
   branch = "master",

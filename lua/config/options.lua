@@ -1,32 +1,32 @@
--- Opciones generales del editor
+-- General editor options
 local opt = vim.opt
 
-opt.termguicolors = true      -- Colores completos (tema y pestañas)
+opt.termguicolors = true      -- True colors (theme and tabs)
 opt.number = true
 opt.relativenumber = false
-opt.cursorline = true         -- Resalta la línea actual, como VS Code
+opt.cursorline = true         -- Highlight the current line, like VS Code
 opt.mouse = "a"
-opt.clipboard = "unnamedplus" -- Usa el portapapeles del sistema
+opt.clipboard = "unnamedplus" -- Use the system clipboard
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.expandtab = true
 opt.smartindent = true
-opt.signcolumn = "yes"        -- Columna fija para errores y marcas de Git
-opt.showmode = false          -- lualine ya muestra el modo
+opt.signcolumn = "yes"        -- Fixed column for errors and Git marks
+opt.showmode = false          -- lualine already shows the mode
 opt.wrap = false
 opt.scrolloff = 8
-opt.ignorecase = true         -- Búsqueda sin distinguir mayúsculas...
-opt.smartcase = true          -- ...salvo que escribas alguna
+opt.ignorecase = true         -- Case-insensitive search...
+opt.smartcase = true          -- ...unless you type an uppercase letter
 opt.splitright = true
 opt.splitbelow = true
-opt.undofile = true           -- El historial de deshacer sobrevive al cerrar
+opt.undofile = true           -- Undo history survives closing the file
 opt.updatetime = 250
 opt.timeoutlen = 400
-opt.confirm = true            -- Pregunta antes de cerrar con cambios sin guardar
-opt.laststatus = 3            -- Una sola barra de estado
-opt.keymodel = "stopsel"      -- Flechas sin Shift cancelan la selección
+opt.confirm = true            -- Ask before closing with unsaved changes
+opt.laststatus = 3            -- Single global status line
+opt.keymodel = "stopsel"      -- Arrows without Shift cancel the selection
 
--- Errores y advertencias en línea, como en VS Code
+-- Inline errors and warnings, like VS Code
 vim.diagnostic.config({
   virtual_text = { spacing = 2, prefix = "●" },
   severity_sort = true,

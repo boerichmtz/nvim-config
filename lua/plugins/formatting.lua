@@ -1,5 +1,5 @@
--- Formatear documento con Shift+Alt+F
--- C/C++: clang-format (usa tu .clang-format si existe) · Python: ruff
+-- Format document with Shift+Alt+F
+-- C/C++: clang-format (uses your .clang-format if present) · Python: ruff
 return {
   {
     "stevearc/conform.nvim",
@@ -10,7 +10,7 @@ return {
         "<A-F>", -- Shift+Alt+F
         function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
         mode = { "n", "v" },
-        desc = "Formatear documento",
+        desc = "Format document",
       },
     },
     opts = {
@@ -20,12 +20,12 @@ return {
         python = { "ruff_organize_imports", "ruff_format" },
         lua = { "stylua" },
       },
-      -- Para formatear al guardar (como "editor.formatOnSave"), quita el comentario:
+      -- To format on save (like "editor.formatOnSave"), uncomment:
       -- format_on_save = { timeout_ms = 1000, lsp_format = "fallback" },
     },
   },
   {
-    -- Instala automáticamente los formateadores con Mason
+    -- Installs the formatters automatically through Mason
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "mason-org/mason.nvim" },
     event = "VeryLazy",

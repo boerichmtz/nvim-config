@@ -1,14 +1,14 @@
 -- ~/.config/nvim/init.lua
--- Neovim estilo VS Code · requiere Neovim 0.11 o más reciente
+-- VS Code-style Neovim · requires Neovim 0.11 or newer
 
--- Líder: debe definirse ANTES de cargar lazy.nvim
+-- Leader key: must be set BEFORE loading lazy.nvim
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 require("config.options")
 require("config.keymaps")
 
--- Bootstrap de lazy.nvim (se instala solo si no existe)
+-- Bootstrap lazy.nvim (installs itself if missing)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local out = vim.fn.system({
@@ -17,7 +17,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
-      { "Error al clonar lazy.nvim:\n", "ErrorMsg" },
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
       { out, "WarningMsg" },
     }, true, {})
     return
@@ -25,7 +25,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Carga todos los archivos de lua/plugins/
+-- Load every file in lua/plugins/
 require("lazy").setup({
   spec = { { import = "plugins" } },
   install = { colorscheme = { "vscode" } },

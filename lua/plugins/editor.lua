@@ -1,6 +1,6 @@
--- Detalles del editor: Git, terminal, cierre de paréntesis, guías y ayuda de atajos
+-- Editor extras: Git signs, terminal, auto-pairs, indent guides and shortcut help
 return {
-  -- Marcas de Git en el margen y "blame" de la línea actual
+  -- Git marks in the gutter and blame for the current line
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -9,14 +9,14 @@ return {
       current_line_blame_opts = { delay = 500 },
     },
     keys = {
-      { "]h", "<cmd>Gitsigns next_hunk<cr>", desc = "Siguiente cambio" },
-      { "[h", "<cmd>Gitsigns prev_hunk<cr>", desc = "Cambio anterior" },
-      { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Ver cambio" },
-      { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Descartar cambio" },
+      { "]h", "<cmd>Gitsigns next_hunk<cr>", desc = "Next change" },
+      { "[h", "<cmd>Gitsigns prev_hunk<cr>", desc = "Previous change" },
+      { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview change" },
+      { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Discard change" },
     },
   },
 
-  -- Terminal integrada: Ctrl+` (o Ctrl+\ si tu terminal no envía Ctrl+`)
+  -- Integrated terminal: Ctrl+` (or Ctrl+\ if your terminal doesn't send Ctrl+`)
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -29,14 +29,14 @@ return {
     },
   },
 
-  -- Cierra paréntesis, llaves y comillas automáticamente
+  -- Auto-close brackets, braces and quotes
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     opts = {},
   },
 
-  -- Guías verticales de indentación
+  -- Vertical indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -44,15 +44,15 @@ return {
     opts = { indent = { char = "│" }, scope = { enabled = true } },
   },
 
-  -- Muestra los atajos disponibles al presionar la tecla líder (Espacio)
+  -- Shows available shortcuts after pressing the leader key (Space)
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {
       spec = {
-        { "<leader>f", group = "Buscar" },
+        { "<leader>f", group = "Find" },
         { "<leader>g", group = "Git" },
-        { "<leader>c", group = "Código" },
+        { "<leader>c", group = "Code" },
       },
     },
   },

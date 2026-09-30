@@ -1,4 +1,4 @@
--- Barra de estado inferior estilo VS Code
+-- VS Code-style status line
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
