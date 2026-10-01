@@ -1,4 +1,49 @@
 -- Sidebar file explorer (VS Code style)
+
+-- Floating legend for the explorer's git/status icons (press L in the explorer)
+local function show_legend()
+  local cfg = require("neo-tree").config.default_component_configs
+  local g = cfg.git_status.symbols
+  local rows = {
+    { g.modified, "Modified", "NeoTreeGitModified" },
+    { g.added, "Added", "NeoTreeGitAdded" },
+    { g.deleted, "Deleted", "NeoTreeGitDeleted" },
+    { g.renamed, "Renamed", "NeoTreeGitRenamed" },
+    { g.untracked, "Untracked (new, not in git)", "NeoTreeGitUntracked" },
+    { g.ignored, "Ignored (.gitignore)", "NeoTreeGitIgnored" },
+    { g.unstaged, "Has changes not staged yet", "NeoTreeGitUnstaged" },
+    { g.staged, "Staged (git add)", "NeoTreeGitStaged" },
+    { g.conflict, "Merge conflict", "NeoTreeGitConflict" },
+    { cfg.modified.symbol, "Open file with unsaved changes", "NeoTreeModified" },
+  }
+  local lines = { " Explorer legend", "" }
+  for _, r in ipairs(rows) do
+    local icon = r[1] or ""
+    icon = icon .. string.rep(" ", 4 - vim.api.nvim_strwidth(icon))
+    table.insert(lines, "  " .. icon .. r[2])
+  end
+  vim.list_extend(lines, { "", " Name color also shows git status", " q / Esc to close" })
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  -- Color each icon and its label the same way the tree does
+  local ns = vim.api.nvim_create_namespace("explorer_legend")
+  for i, r in ipairs(rows) do
+    vim.api.nvim_buf_set_extmark(buf, ns, i + 1, 2, { end_col = #lines[i + 2], hl_group = r[3] })
+  end
+  vim.api.nvim_buf_set_extmark(buf, ns, 0, 0, { end_col = #lines[1], hl_group = "Title" })
+  vim.bo[buf].modifiable = false
+  local width = 0
+  for _, l in ipairs(lines) do width = math.max(width, vim.api.nvim_strwidth(l)) end
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor", style = "minimal", border = "rounded",
+    width = width + 2, height = #lines,
+    row = math.floor((vim.o.lines - #lines) / 2), col = math.floor((vim.o.columns - width) / 2),
+  })
+  for _, key in ipairs({ "q", "<Esc>", "L" }) do
+    vim.keymap.set("n", key, function() vim.api.nvim_win_close(win, true) end, { buffer = buf })
+  end
+end
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
@@ -22,25 +67,22 @@ return {
         width = function(node, state)
           local win = vim.api.nvim_win_get_width(state.winid)
           local depth = node.get_depth and node:get_depth() or 1
-          -- indent + icon + name + git letter / problem marks next to the name
-          local needed = depth * 2 + 10 + vim.api.nvim_strwidth(node.name or "")
+          -- The container starts after the indent and the icon, so its full width is
+          -- the window minus that prefix (this keeps the columns lined up at every depth)
+          local prefix = (depth - 1) * 2 + 3
+          local fit = win - prefix
+          -- name + git/problem marks next to it
+          local needed = vim.api.nvim_strwidth(node.name or "") + 6
           -- Room for the detail columns that are visible at this width
           if win >= 64 then needed = needed + 12 end  -- size
           if win >= 88 then needed = needed + 22 end  -- last modified
           if win >= 110 then needed = needed + 12 end -- type
-          return math.max(win, needed)
+          return math.max(fit, needed)
         end,
       },
-      -- VS Code-style git letters instead of icons
-      git_status = {
-        symbols = {
-          added = "A", modified = "M", deleted = "D", renamed = "R",
-          untracked = "U", ignored = "", unstaged = "", staged = "", conflict = "!",
-        },
-      },
     },
-    -- Git letters, problems and unsaved marks sit right after the name (like VS Code)
-    -- instead of at the far right edge; size/date columns stay on the right
+    -- Git status, problems and unsaved marks sit right after the name instead of at the
+    -- far right edge; size/date columns stay on the right
     renderers = {
       directory = {
         { "indent" },
@@ -90,6 +132,8 @@ return {
         ["<S-ScrollWheelUp>"] = function() vim.cmd("normal! 5zh") end,
         ["<ScrollWheelRight>"] = function() vim.cmd("normal! 5zl") end,
         ["<ScrollWheelLeft>"] = function() vim.cmd("normal! 5zh") end,
+        -- L shows what the git/status icons mean
+        ["L"] = show_legend,
         -- Home jumps back to the left edge
         ["<Home>"] = function() vim.cmd("normal! 0") end,
         -- T opens a new terminal tab in the selected folder
