@@ -11,6 +11,10 @@ return {
   },
   opts = {
     options = {
+      -- Clicking the X (or middle click) closes only that tab
+      close_command = function(n) _G.CloseBuffer(n) end,
+      right_mouse_command = function() end,
+      middle_mouse_command = function(n) _G.CloseBuffer(n) end,
       diagnostics = "nvim_lsp",
       separator_style = "slant",
       offsets = {

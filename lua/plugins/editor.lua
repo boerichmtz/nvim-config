@@ -53,6 +53,7 @@ return {
         { "<leader>f", group = "Find" },
         { "<leader>g", group = "Git" },
         { "<leader>c", group = "Code" },
+        { "<leader>q", group = "Session" },
       },
     },
   },

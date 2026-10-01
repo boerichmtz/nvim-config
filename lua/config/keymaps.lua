@@ -23,9 +23,6 @@ map("v", "<A-Down>", ":move '>+1<cr>gv=gv", { desc = "Move selection down" })
 map("v", "<Tab>", ">gv", { desc = "Indent" })
 map("v", "<S-Tab>", "<gv", { desc = "Outdent" })
 
--- Close the current tab (buffer)
-map("n", "<leader>x", "<cmd>bdelete<cr>", { desc = "Close tab" })
-
 -- Move between split panes with Ctrl+h/j/k/l
 map("n", "<C-h>", "<C-w>h", { desc = "Pane left" })
 map("n", "<C-j>", "<C-w>j", { desc = "Pane below" })
