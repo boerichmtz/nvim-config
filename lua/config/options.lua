@@ -1,6 +1,10 @@
 -- General editor options
 local opt = vim.opt
 
+-- The explorer replaces netrw; folders passed to nvim are handled in plugins/session.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 opt.termguicolors = true      -- True colors (theme and tabs)
 opt.number = true
 opt.relativenumber = false

@@ -30,7 +30,7 @@ return {
         end,
       })
 
-      -- Auto-restore when nvim starts with no files or with a folder ("nvim" or "nvim .")
+      -- On "nvim" or "nvim <folder>": restore that folder's session and open the explorer
       vim.api.nvim_create_autocmd("VimEnter", {
         group = group,
         nested = true,
@@ -39,22 +39,23 @@ return {
           if argc > 1 or (argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 0) then
             return
           end
-          -- Wait until the explorer has finished taking over the "nvim ." folder buffer,
-          -- otherwise it replaces the restored file with an empty window
-          vim.defer_fn(function()
-            vim.cmd("silent! %argdelete")
-            -- Close the explorer first: if it were the only window left, it would quit nvim
-            pcall(vim.cmd, "Neotree close")
-            require("persistence").load()
-            pcall(vim.cmd, "Neotree show")
-            -- Put the cursor in the editor, not in the explorer
-            for _, w in ipairs(vim.api.nvim_list_wins()) do
-              if vim.bo[vim.api.nvim_win_get_buf(w)].buftype == "" then
-                vim.api.nvim_set_current_win(w)
-                break
-              end
+          if argc == 1 then
+            vim.cmd.cd(vim.fn.fnameescape(vim.fn.argv(0)))
+            -- Replace the folder buffer with an empty one
+            local dirbuf = vim.api.nvim_get_current_buf()
+            vim.cmd("enew")
+            pcall(vim.api.nvim_buf_delete, dirbuf, { force = true })
+          end
+          vim.cmd("silent! %argdelete")
+          require("persistence").load()
+          pcall(vim.cmd, "Neotree show")
+          -- Leave the cursor in the editor, not in the explorer
+          for _, w in ipairs(vim.api.nvim_list_wins()) do
+            if vim.bo[vim.api.nvim_win_get_buf(w)].buftype == "" then
+              vim.api.nvim_set_current_win(w)
+              break
             end
-          end, 50)
+          end
         end,
       })
     end,

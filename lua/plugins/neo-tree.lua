@@ -2,7 +2,7 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
-  lazy = false, -- load at startup so "nvim ." opens the explorer
+  lazy = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-tree/nvim-web-devicons",
@@ -58,7 +58,7 @@ return {
     filesystem = {
       follow_current_file = { enabled = true },
       use_libuv_file_watcher = true, -- refreshes when files are created/deleted
-      hijack_netrw_behavior = "open_default",
+      hijack_netrw_behavior = "disabled", -- "nvim ." is handled by plugins/session.lua
       filtered_items = {
         hide_dotfiles = false,
         hide_gitignored = false,
