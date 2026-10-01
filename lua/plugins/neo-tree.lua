@@ -14,9 +14,22 @@ return {
   },
   opts = {
     close_if_last_window = true,
-    -- Never cut long names: let them run past the edge and scroll with Left/Right
+    -- Never cut long names: rows that don't fit run past the edge (scroll with Left/Right),
+    -- rows that fit keep the size/date columns aligned to the window edge
     default_component_configs = {
-      container = { width = "fit_content", enable_character_fade = false },
+      container = {
+        enable_character_fade = false,
+        width = function(node, state)
+          local win = vim.api.nvim_win_get_width(state.winid)
+          local depth = node.get_depth and node:get_depth() or 1
+          local needed = depth * 2 + 4 + vim.api.nvim_strwidth(node.name or "")
+          -- Room for the detail columns that are visible at this width
+          if win >= 64 then needed = needed + 12 end  -- size
+          if win >= 88 then needed = needed + 22 end  -- last modified
+          if win >= 110 then needed = needed + 12 end -- type
+          return math.max(win, needed)
+        end,
+      },
     },
     window = {
       width = 30,
