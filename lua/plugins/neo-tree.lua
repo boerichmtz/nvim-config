@@ -44,15 +44,14 @@ return {
         ["<ScrollWheelLeft>"] = function() vim.cmd("normal! 5zh") end,
         -- Home jumps back to the left edge
         ["<Home>"] = function() vim.cmd("normal! 0") end,
-        -- T opens a NEW terminal in the selected folder
+        -- T opens a new terminal tab in the selected folder
         ["T"] = function(state)
           local node = state.tree:get_node()
           local dir = vim.fn.getcwd()
           if node then
             dir = node.type == "directory" and node.path or vim.fn.fnamemodify(node.path, ":h")
           end
-          vim.cmd("wincmd l")
-          require("toggleterm.terminal").Terminal:new({ dir = dir }):toggle()
+          require("config.terminal").new(dir)
         end,
       },
     },

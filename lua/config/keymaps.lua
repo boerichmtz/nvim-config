@@ -44,11 +44,6 @@ for key, motion in pairs(sel) do
   map("v", key, motion, { desc = "Extend selection" })
 end
 
--- Alt+1/2/3 opens or switches to terminal 1, 2 or 3 (also from inside a terminal)
-for i = 1, 3 do
-  map({ "n", "t" }, "<A-" .. i .. ">", "<cmd>" .. i .. "ToggleTerm<cr>", { desc = "Terminal " .. i })
-end
-map("n", "<leader>tt", "<cmd>TermSelect<cr>", { desc = "Pick terminal" })
 
 -- From a terminal: Ctrl+H/J/K/L switch panes without leaving terminal mode
 map("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { desc = "Pane left" })

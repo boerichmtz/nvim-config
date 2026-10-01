@@ -20,6 +20,7 @@ return {
         pattern = "PersistenceSavePre",
         callback = function()
           pcall(vim.cmd, "Neotree close")
+          vim.cmd("silent! %argdelete") -- don't store "nvim ." as a file to reopen
           -- Drop folder buffers (from "nvim .") so they don't come back as tabs
           for _, b in ipairs(vim.api.nvim_list_bufs()) do
             if vim.fn.isdirectory(vim.api.nvim_buf_get_name(b)) == 1 then
@@ -38,8 +39,13 @@ return {
           if argc > 1 or (argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 0) then
             return
           end
-          require("persistence").load()
-          vim.schedule(function()
+          -- Wait until the explorer has finished taking over the "nvim ." folder buffer,
+          -- otherwise it replaces the restored file with an empty window
+          vim.defer_fn(function()
+            vim.cmd("silent! %argdelete")
+            -- Close the explorer first: if it were the only window left, it would quit nvim
+            pcall(vim.cmd, "Neotree close")
+            require("persistence").load()
             pcall(vim.cmd, "Neotree show")
             -- Put the cursor in the editor, not in the explorer
             for _, w in ipairs(vim.api.nvim_list_wins()) do
@@ -48,7 +54,7 @@ return {
                 break
               end
             end
-          end)
+          end, 50)
         end,
       })
     end,

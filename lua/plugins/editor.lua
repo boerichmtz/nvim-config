@@ -1,4 +1,4 @@
--- Editor extras: Git signs, terminal, auto-pairs, indent guides and shortcut help
+-- Editor extras: Git signs, auto-pairs, indent guides and shortcut help
 return {
   -- Git marks in the gutter and blame for the current line
   {
@@ -13,19 +13,6 @@ return {
       { "[h", "<cmd>Gitsigns prev_hunk<cr>", desc = "Previous change" },
       { "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview change" },
       { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Discard change" },
-    },
-  },
-
-  -- Integrated terminal: Ctrl+` (or Ctrl+\ if your terminal doesn't send Ctrl+`)
-  {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    cmd = "ToggleTerm",
-    keys = { "<C-`>", "<C-\\>" },
-    opts = {
-      open_mapping = { "<C-`>", "<C-\\>" },
-      direction = "horizontal",
-      size = 15,
     },
   },
 
@@ -54,6 +41,7 @@ return {
         { "<leader>g", group = "Git" },
         { "<leader>c", group = "Code" },
         { "<leader>q", group = "Session" },
+        { "<leader>t", group = "Terminal" },
       },
     },
   },
