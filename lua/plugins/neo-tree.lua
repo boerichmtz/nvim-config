@@ -14,6 +14,10 @@ return {
   },
   opts = {
     close_if_last_window = true,
+    -- Never cut long names: let them run past the edge and scroll with Left/Right
+    default_component_configs = {
+      container = { width = "fit_content", enable_character_fade = false },
+    },
     window = {
       width = 30,
       mappings = {
