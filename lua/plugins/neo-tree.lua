@@ -20,6 +20,13 @@ return {
         -- Left/Right arrows scroll the tree sideways to read long paths
         ["<Right>"] = function() vim.cmd("normal! 5zl") end,
         ["<Left>"] = function() vim.cmd("normal! 5zh") end,
+        -- Shift+mouse wheel also scrolls sideways
+        ["<S-ScrollWheelDown>"] = function() vim.cmd("normal! 5zl") end,
+        ["<S-ScrollWheelUp>"] = function() vim.cmd("normal! 5zh") end,
+        ["<ScrollWheelRight>"] = function() vim.cmd("normal! 5zl") end,
+        ["<ScrollWheelLeft>"] = function() vim.cmd("normal! 5zh") end,
+        -- Home jumps back to the left edge
+        ["<Home>"] = function() vim.cmd("normal! 0") end,
         -- T opens a NEW terminal in the selected folder
         ["T"] = function(state)
           local node = state.tree:get_node()
