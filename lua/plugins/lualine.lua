@@ -9,6 +9,8 @@ return {
       globalstatus = true,
       component_separators = "",
       section_separators = "",
+      -- Leave the terminal panel's tab bar alone (see config/terminal.lua)
+      disabled_filetypes = { winbar = { "termpanel" } },
     },
   },
 }

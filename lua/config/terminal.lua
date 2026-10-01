@@ -36,12 +36,22 @@ local function open_panel()
   end
   vim.cmd("botright " .. M.height .. "split")
   M.win = vim.api.nvim_get_current_win()
-  local wo = vim.wo[M.win]
-  wo.winfixheight = true
-  wo.number = false
-  wo.relativenumber = false
-  wo.signcolumn = "no"
-  wo.winbar = "%!v:lua.TermTabsBar()"
+end
+
+-- Put a terminal buffer in the panel. Window options are re-applied every time because
+-- Neovim resets window-local options like the tab bar when the buffer changes.
+local function set_panel_buf(buf)
+  vim.api.nvim_win_set_buf(M.win, buf)
+  local opts = {
+    winbar = "%!v:lua.TermTabsBar()",
+    winfixheight = true,
+    number = false,
+    relativenumber = false,
+    signcolumn = "no",
+  }
+  for k, v in pairs(opts) do
+    vim.api.nvim_set_option_value(k, v, { win = M.win, scope = "local" })
+  end
 end
 
 -- Show terminal i in the panel (creates one if it doesn't exist yet)
@@ -49,7 +59,7 @@ function M.show(i)
   local t = M.terms[i]
   if not t then return M.new() end
   open_panel()
-  vim.api.nvim_win_set_buf(M.win, t.buf)
+  set_panel_buf(t.buf)
   M.active = i
   refresh()
   vim.cmd("startinsert")
@@ -66,8 +76,10 @@ function M.new(dir, name)
     cwd = dir,
     on_exit = function() vim.schedule(function() M.remove(buf) end) end,
   })
+  vim.bo[buf].filetype = "termpanel" -- lets lualine skip this window's tab bar
   vim.bo[buf].bufhidden = "hide"
   vim.bo[buf].buflisted = false
+  set_panel_buf(buf)
   table.insert(M.terms, { buf = buf, name = name or vim.fn.fnamemodify(dir, ":t") })
   M.active = #M.terms
   refresh()
@@ -85,7 +97,7 @@ function M.remove(buf)
   else
     local next_i = math.min(i, #M.terms)
     if valid_win() and vim.api.nvim_win_get_buf(M.win) == buf then
-      vim.api.nvim_win_set_buf(M.win, M.terms[next_i].buf)
+      set_panel_buf(M.terms[next_i].buf)
       M.active = next_i
     elseif M.active and M.active > i then
       M.active = M.active - 1
