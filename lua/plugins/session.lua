@@ -12,13 +12,20 @@ return {
     config = function()
       -- Don't store the explorer or terminals in the session; they are reopened fresh
       vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp" }
-      require("persistence").setup({ need = 1 })
+      -- One session per folder, whatever git branch you're on
+      require("persistence").setup({ need = 1, branch = false })
+      -- Folder nvim was opened in; the session is always saved under it, even if the
+      -- explorer root was moved to a subfolder (which changes the working directory)
+      local start_dir = nil
 
       local group = vim.api.nvim_create_augroup("session_restore", { clear = true })
       vim.api.nvim_create_autocmd("User", {
         group = group,
         pattern = "PersistenceSavePre",
         callback = function()
+          if start_dir and vim.fn.getcwd() ~= start_dir then
+            vim.cmd.cd(vim.fn.fnameescape(start_dir))
+          end
           pcall(vim.cmd, "Neotree close")
           vim.cmd("silent! %argdelete") -- don't store "nvim ." as a file to reopen
           -- Drop folder buffers (from "nvim .") so they don't come back as tabs
@@ -37,6 +44,8 @@ return {
         callback = function()
           local argc = vim.fn.argc()
           if argc > 1 or (argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 0) then
+            -- Opened specific files: leave the folder's saved session untouched
+            require("persistence").stop()
             return
           end
           if argc == 1 then
@@ -46,6 +55,7 @@ return {
             vim.cmd("enew")
             pcall(vim.api.nvim_buf_delete, dirbuf, { force = true })
           end
+          start_dir = vim.fn.getcwd()
           vim.cmd("silent! %argdelete")
           require("persistence").load()
           pcall(vim.cmd, "Neotree show")
