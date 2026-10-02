@@ -66,7 +66,15 @@ return {
     "echasnovski/mini.bufremove",
     lazy = true,
     init = function()
-      local close = function(buf) require("mini.bufremove").delete(buf or 0, false) end
+      local close = function(buf)
+        if buf == nil or buf == 0 then buf = vim.api.nvim_get_current_buf() end
+        local ft = vim.bo[buf].filetype
+        -- In the terminal panel, close just that terminal tab and keep the panel
+        if ft == "termpanel" then return require("config.terminal").remove(buf) end
+        -- Never close the explorer this way
+        if ft == "neo-tree" then return end
+        require("mini.bufremove").delete(buf, false)
+      end
       vim.keymap.set("n", "<leader>x", function() close() end, { desc = "Close tab" })
       vim.api.nvim_create_user_command("CloseTab", function() close() end, { desc = "Close current tab" })
       _G.CloseBuffer = close
