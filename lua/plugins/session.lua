@@ -37,14 +37,32 @@ return {
         end,
       })
 
-      -- On "nvim" or "nvim <folder>": restore that folder's session and open the explorer
+      -- Remove folder tabs (e.g. "erick/") and leftover empty tabs after a restore
+      local function tidy_buffers()
+        local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+        local has_file = false
+        for _, b in ipairs(bufs) do
+          if b.name ~= "" and vim.fn.isdirectory(b.name) == 0 then has_file = true end
+        end
+        for _, b in ipairs(bufs) do
+          local is_dir = b.name ~= "" and vim.fn.isdirectory(b.name) == 1
+          local is_empty = b.name == "" and b.changed == 0 and has_file
+          if is_dir or is_empty then
+            require("mini.bufremove").delete(b.bufnr, true)
+          end
+        end
+      end
+
+      -- Like VS Code:
+      --   nvim          -> reopen the last folder you worked in, with its tabs
+      --   nvim <folder> -> open that folder, with its tabs
+      --   nvim <files>  -> just those files; saved sessions are left untouched
       vim.api.nvim_create_autocmd("VimEnter", {
         group = group,
         nested = true,
         callback = function()
           local argc = vim.fn.argc()
           if argc > 1 or (argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 0) then
-            -- Opened specific files: leave the folder's saved session untouched
             require("persistence").stop()
             return
           end
@@ -55,10 +73,12 @@ return {
             vim.cmd("enew")
             pcall(vim.api.nvim_buf_delete, dirbuf, { force = true })
           end
-          start_dir = vim.fn.getcwd()
           vim.cmd("silent! %argdelete")
-          require("persistence").load()
-          pcall(vim.cmd, "Neotree show")
+          require("persistence").load({ last = argc == 0 })
+          -- The session moves to its own folder; save back to that same folder on exit
+          start_dir = vim.fn.getcwd()
+          tidy_buffers()
+          pcall(vim.cmd, "Neotree show dir=" .. vim.fn.fnameescape(start_dir))
           -- Leave the cursor in the editor, not in the explorer
           for _, w in ipairs(vim.api.nvim_list_wins()) do
             if vim.bo[vim.api.nvim_win_get_buf(w)].buftype == "" then
