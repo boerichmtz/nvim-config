@@ -9,6 +9,7 @@ require("config.options")
 require("config.keymaps")
 require("config.terminal")
 require("config.editor_groups")
+require("config.cmdhints")
 
 -- Bootstrap lazy.nvim (installs itself if missing)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

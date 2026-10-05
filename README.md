@@ -52,3 +52,11 @@ Each split has its own row of tabs (like VS Code editor groups).
 | Editor | `Space w c` or `:close` | Close the whole split |
 
 In the explorer, `Enter` opens and expands (Space is the leader key there too).
+
+## Command-line hints
+
+While you type a `:` command or a `/` search, a small window above the command line shows
+the command's template, highlights the field you are typing, and explains what goes there
+(like Excel's formula tooltips). It covers `:` on its own, ranges (`%`, `'<,'>`, `10,20`),
+`:s` (search and replace), `:g` / `:v`, `:sort`, `:norm`, `:!` and `/` searches.
+Turn it on or off with `:HintsToggle`.
