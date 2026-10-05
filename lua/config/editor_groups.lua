@@ -54,6 +54,20 @@ end
 ------------------------------------------------------------------------------
 -- Tab bar (drawn in each editor window's winbar; tabs, X and middle-click work)
 ------------------------------------------------------------------------------
+-- Tab colors (VS Code style):
+--   EGTabActive   file you're looking at, in the window you're working in (blue)
+--   EGTabCurrent  file shown in another window (lighter, not blue)
+--   EGTab         other tabs (dimmed)
+local function set_colors()
+  vim.api.nvim_set_hl(0, "EGTabActive", { fg = "#ffffff", bg = "#0e639c", bold = true })
+  vim.api.nvim_set_hl(0, "EGTabActiveEdge", { fg = "#3794ff", bg = "#0e639c", bold = true })
+  vim.api.nvim_set_hl(0, "EGTabCurrent", { fg = "#e0e0e0", bg = "#3a3d41", bold = true })
+  vim.api.nvim_set_hl(0, "EGTab", { fg = "#8b8b8b", bg = "#252526" })
+  vim.api.nvim_set_hl(0, "EGTabFill", { fg = "#454545", bg = "#181818" })
+end
+set_colors()
+vim.api.nvim_create_autocmd("ColorScheme", { callback = set_colors })
+
 function M.bar()
   local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
   local win = vim.g.statusline_winid
@@ -65,18 +79,20 @@ function M.bar()
     if vim.api.nvim_buf_is_valid(buf) then
       local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
       local selected = buf == cur
-      local hl = selected and (active_win and "%#TabLineSel#" or "%#TabLine#") or "%#TabLineFill#"
+      local hl = selected and (active_win and "%#EGTabActive#" or "%#EGTabCurrent#") or "%#EGTab#"
+      -- A bar on the left of the tab you are working in, like VS Code's accent line
+      local edge = (selected and active_win) and "%#EGTabActiveEdge#▎" or (hl .. " ")
       local icon = ""
       if devicons_ok then
         local ic = devicons.get_icon(name, nil, { default = true })
         if ic then icon = ic .. " " end
       end
       local mark = vim.bo[buf].modified and "●" or "×"
-      table.insert(parts, ("%s%%%d@v:lua.EditorGroupsClick@ %s%s %%X%%%d@v:lua.EditorGroupsCloseClick@%s %%X")
-        :format(hl, buf, icon, name:gsub("%%", "%%%%"), buf, mark))
+      table.insert(parts, ("%s%s%%%d@v:lua.EditorGroupsClick@%s%s %%X%%%d@v:lua.EditorGroupsCloseClick@%s %%X")
+        :format(edge, hl, buf, icon, (name:gsub("%%", "%%%%")), buf, mark))
     end
   end
-  return table.concat(parts, "%#TabLineFill#│") .. "%#TabLineFill#"
+  return table.concat(parts, "%#EGTabFill#│") .. "%#EGTabFill#"
 end
 
 local function clicked_win()
@@ -287,6 +303,8 @@ vim.api.nvim_create_autocmd({ "WinEnter", "WinNew", "FileType" }, {
     local win = vim.api.nvim_get_current_win()
     apply_bar(win)
     if is_editor_win(win) then M.last_win = win end
+    -- Repaint every tab bar so the blue tab follows the window you're in
+    vim.cmd("redrawstatus!")
   end,
 })
 
