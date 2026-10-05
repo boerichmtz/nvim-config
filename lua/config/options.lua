@@ -29,6 +29,8 @@ opt.timeoutlen = 400
 opt.confirm = true            -- Ask before closing with unsaved changes
 opt.laststatus = 3            -- Single global status line
 opt.keymodel = "stopsel"      -- Arrows without Shift cancel the selection
+-- Symbols shown with :set list (off by default; :set nolist hides them again)
+opt.listchars = { space = "␠", tab = "→ ", trail = "•", nbsp = "+" }
 
 -- Inline errors and warnings, like VS Code
 vim.diagnostic.config({

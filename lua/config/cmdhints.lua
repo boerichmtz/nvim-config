@@ -80,7 +80,15 @@ local START = {
   "Common commands",
   "w  save           q  close window      qa  quit all       e {file}  open",
   "%s/a/b/gc  replace   g/pat/d  delete matching lines   noh  clear highlight",
-  "sort · norm {keys} · !{shell cmd} · help {topic}     Tab: complete · ↑↓: history",
+  "set {option} · sort · norm {keys} · !{shell cmd} · help {topic}   Tab: complete · ↑↓: history",
+}
+
+local SET = {
+  ":set {option}  on  ·  :set no{option}  off  ·  :set {option}!  toggle  ·  :set {option}?  show",
+  "list               show spaces ␠, tabs → and trailing spaces •",
+  "number  relativenumber   line numbers          wrap   wrap long lines",
+  "expandtab  tabstop=4  shiftwidth=4   indentation (spaces, width)",
+  "ignorecase  hlsearch  spell              cursorline  colorcolumn=80",
 }
 
 local AFTER_RANGE = {
@@ -173,6 +181,7 @@ function M.compute(cmdtype, line)
     return structured(GLOBAL, #parts >= 2 and "command" or "find")
   end
 
+  if (name == "se" or name == "set" or name == "setlocal" or name == "setl") then return { help = SET } end
   if is_prefix(name, "sort", 3) then return { help = SORT } end
   if is_prefix(name, "normal", 4) then return { help = NORMAL } end
   return nil

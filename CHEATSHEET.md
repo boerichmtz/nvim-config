@@ -187,6 +187,7 @@ Inside any diff: `]c` / `[c` next / previous difference · `do` take the other s
 | `:LspInfo` | Is the language server attached? |
 | `:HintsToggle` | Turn the command-line hints on / off |
 | `:checkhealth` | General diagnosis |
+| `:set list` / `:set nolist` | Show / hide spaces `␠`, tabs `→` and trailing spaces `•` |
 
 ## When something goes wrong
 
