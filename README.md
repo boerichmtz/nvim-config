@@ -2,6 +2,8 @@
 
 Neovim configuration with the look and shortcuts of VS Code, for C, C++ and Python.
 
+**Shortcuts and tips: [CHEATSHEET.md](CHEATSHEET.md)**
+
 ## Install (WSL / Linux)
 
 ```
