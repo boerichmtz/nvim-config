@@ -18,8 +18,8 @@ local function is_editor_win(win)
 end
 
 local function is_tab_buf(buf)
+  -- (not checking 'buflisted': the explorer lists a file only after showing it)
   return vim.api.nvim_buf_is_valid(buf)
-    and vim.bo[buf].buflisted
     and vim.bo[buf].buftype == ""
     and vim.api.nvim_buf_get_name(buf) ~= ""
     and vim.fn.isdirectory(vim.api.nvim_buf_get_name(buf)) == 0
@@ -272,9 +272,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.api.nvim_create_autocmd({ "BufWinEnter", "BufFilePost" }, {
   group = group,
   callback = function(ev)
-    local win = vim.api.nvim_get_current_win()
-    if vim.api.nvim_win_get_buf(win) == ev.buf then add(win, ev.buf) end
-    apply_bar(win)
+    -- The explorer opens files from its own window, so look at every window showing
+    -- this buffer instead of only the current one
+    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
+      add(win, ev.buf)
+      apply_bar(win)
+    end
   end,
 })
 
