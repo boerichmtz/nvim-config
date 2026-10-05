@@ -78,6 +78,8 @@ return {
           -- The session moves to its own folder; save back to that same folder on exit
           start_dir = vim.fn.getcwd()
           tidy_buffers()
+          -- Give each split back its own tabs
+          require("config.editor_groups").restore()
           pcall(vim.cmd, "Neotree show dir=" .. vim.fn.fnameescape(start_dir))
           -- Leave the cursor in the editor, not in the explorer
           for _, w in ipairs(vim.api.nvim_list_wins()) do
@@ -91,7 +93,7 @@ return {
     end,
   },
 
-  -- Close a buffer but keep the window, so closing the last tab doesn't quit nvim
+  -- Close-tab shortcut, and a helper to remove buffers without closing their window
   {
     "echasnovski/mini.bufremove",
     lazy = true,
@@ -103,11 +105,11 @@ return {
         if ft == "termpanel" then return require("config.terminal").remove(buf) end
         -- Never close the explorer this way
         if ft == "neo-tree" then return end
-        require("mini.bufremove").delete(buf, false)
+        -- In an editor window, close the tab in that window (see config/editor_groups.lua)
+        require("config.editor_groups").close_tab(0, buf)
       end
       vim.keymap.set("n", "<leader>x", function() close() end, { desc = "Close tab" })
       vim.api.nvim_create_user_command("CloseTab", function() close() end, { desc = "Close current tab" })
-      _G.CloseBuffer = close
     end,
   },
 }

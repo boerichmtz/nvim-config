@@ -37,3 +37,18 @@ Press `L` inside the explorer to see this legend in nvim.
 
 A modified file that isn't staged shows two icons: ` 󰄱`.
 Icons need a Nerd Font in the terminal (e.g. JetBrainsMono Nerd Font Mono).
+
+## Split windows and tabs
+
+Each split has its own row of tabs (like VS Code editor groups).
+
+| Where | Keys | Action |
+|-------|------|--------|
+| Explorer | `Ctrl+W` or `Space w`, then an arrow or `h/j/k/l` | Open the selected file in a new split on that side |
+| Editor | `Ctrl+W` or `Space w`, then an arrow or `h/j/k/l` | Move to the window on that side |
+| Editor | `Space \` / `Space -` | Split the current file right / down |
+| Editor | `Alt+←` / `Alt+→` | Previous / next tab in this window |
+| Editor | `Space x`, `:CloseTab`, click `×`, middle click | Close the tab; closing the last tab closes the split |
+| Editor | `Space w c` or `:close` | Close the whole split |
+
+In the explorer, `Enter` opens and expands (Space is the leader key there too).

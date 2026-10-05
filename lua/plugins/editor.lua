@@ -42,6 +42,7 @@ return {
         { "<leader>c", group = "Code" },
         { "<leader>q", group = "Session" },
         { "<leader>t", group = "Terminal" },
+        { "<leader>w", group = "Window" },
       },
     },
   },

@@ -132,6 +132,8 @@ return {
         ["<S-ScrollWheelUp>"] = function() vim.cmd("normal! 5zh") end,
         ["<ScrollWheelRight>"] = function() vim.cmd("normal! 5zl") end,
         ["<ScrollWheelLeft>"] = function() vim.cmd("normal! 5zh") end,
+        -- Space is the leader key (Space w + direction opens the file in a split)
+        ["<space>"] = "none",
         -- L shows what the git/status icons mean
         ["L"] = show_legend,
         -- Home jumps back to the left edge

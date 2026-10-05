@@ -8,6 +8,7 @@ vim.g.maplocalleader = " "
 require("config.options")
 require("config.keymaps")
 require("config.terminal")
+require("config.editor_groups")
 
 -- Bootstrap lazy.nvim (installs itself if missing)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
