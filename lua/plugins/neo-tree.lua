@@ -44,6 +44,18 @@ local function show_legend()
   end
 end
 
+-- Re-read git status for every repo shown in the tree. The explorer only refreshes the repo
+-- at its root; when the root holds several repos (e.g. a `repo` workspace), the nested ones
+-- kept showing old marks (a committed file still marked "?").
+local function refresh_git_all()
+  local ok, git = pcall(require, "neo-tree.git")
+  if not ok then return end
+  local opts = require("neo-tree").config.git_status_async_options or {}
+  for root in pairs(git.worktrees) do
+    git.status_async(root, nil, opts)
+  end
+end
+
 return {
   "nvim-neo-tree/neo-tree.nvim",
   branch = "v3.x",
@@ -53,6 +65,15 @@ return {
     "nvim-tree/nvim-web-devicons",
     "MunifTanjim/nui.nvim",
   },
+  init = function()
+    -- Coming back from the terminal (where you run git) or from another app: refresh git marks
+    vim.api.nvim_create_autocmd("WinLeave", {
+      callback = function()
+        if vim.bo.buftype == "terminal" then vim.schedule(refresh_git_all) end
+      end,
+    })
+    vim.api.nvim_create_autocmd("FocusGained", { callback = function() vim.schedule(refresh_git_all) end })
+  end,
   keys = {
     -- Ctrl+B toggles the explorer (same as VS Code)
     { "<C-b>", "<cmd>Neotree toggle<cr>", desc = "Explorer" },
@@ -136,6 +157,11 @@ return {
         ["<space>"] = "none",
         -- L shows what the git/status icons mean
         ["L"] = show_legend,
+        -- R refreshes files and the git marks of every repo in the tree
+        ["R"] = function(state)
+          require("neo-tree.sources.filesystem.commands").refresh(state)
+          refresh_git_all()
+        end,
         -- Home jumps back to the left edge
         ["<Home>"] = function() vim.cmd("normal! 0") end,
         -- T opens a new terminal tab in the selected folder
